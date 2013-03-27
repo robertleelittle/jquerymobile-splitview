@@ -566,7 +566,7 @@
       $(window).bind('throttledresize', _orientationHandler);
 
       //popover button click handler - from http://www.cagintranet.com/archive/create-an-ipad-like-dropdown-popover/
-      $('.popover-btn').live('click', function(e){ 
+      $(document).on('click','.popover-btn', function(e){ 
         e.preventDefault(); 
         $('.panel-popover').fadeToggle('fast'); 
         if ($('.popover-btn').hasClass($.mobile.activeBtnClass)) { 
@@ -576,7 +576,7 @@
         } 
       });
 
-      $('body').live('click', function(event) { 
+      $(document).on('click', 'body', function(event) { 
         if (!$(event.target).closest('.panel-popover').length && !$(event.target).closest('.popover-btn').length) { 
             $(".panel-popover").stop(true, true).hide(); 
             $('.popover-btn').removeClass($.mobile.activeBtnClass); 
@@ -611,8 +611,22 @@
 
       //data-hash 'crumbs' handler
       //now that data-backbtn is no longer defaulting to true, lets set crumbs to create itself even when backbtn is not available
-      $('div:jqmData(role="page")').live('pagebeforeshow.crumbs', function(event, data){
-        var $this = $(this);
+     // 
+     // *******************************************************************************************
+     //  rll:  20130327 
+     // *******************************************************************************************
+     // replaced the live call with an on call.  As of jQuery 1.7, the .live() method is deprecated.
+     // 
+     // 
+     //     Old call:  $('div:jqmData(role="page")').live('pagebeforeshow.crumbs', function(event, data){
+     //
+     //     by replaceing document as the selector acting on and passing the selector as part of the call
+     //     all functionality is kept.
+     //     
+     // *******************************************************************************************
+     
+      $(document).on('pagebeforeshow.crumbs','div:jqmData(role="page")', function(event, data){
+      var $this = $(this);
         if($this.jqmData('hash') == 'crumbs' || $this.parents('div:jqmData(role="panel")').data('hash') == 'crumbs'){
           if($this.jqmData('hash')!=false && $this.find('.ui-crumbs').length < 1){
             var $header=$this.find('div:jqmData(role="header")');
@@ -647,7 +661,7 @@
 
       //data-context handler - a page with a link that has a data-context attribute will load that page after this page loads
       //this still needs work - pageTransitionQueue messes everything up.
-      $('div:jqmData(role="panel")').live('pagechange.context', function(){
+      $(document).on('pagechange.context','div:jqmData(role="panel")', function(){
         var $this=$(this),
             $currPanelActivePage = $this.children('.' + $.mobile.activePageClass),
             panelContextSelector = $this.jqmData('context'),
